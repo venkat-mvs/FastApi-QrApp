@@ -3,7 +3,9 @@ from typing import Optional
 from fastapi.datastructures import UploadFile
 from fastapi.params import Depends, File, Query
 from fastapi.responses import StreamingResponse
-from fastapi.routing import APIRouter
+from fastapi.routing import APIRoute, APIRouter
+
+from API.settings import ENV
 
 
 from .QRGenerator import QRGenerator
@@ -11,7 +13,7 @@ from .services import QRGeneratorService
 from .models import FileObject
 
 router = APIRouter(
-    prefix= "/qr",
+    prefix= "/qrcode",
     tags = ["QR Generator"]
 )
 
@@ -25,16 +27,18 @@ def Init():
             }
         },
         name="QR code Generator")
-async def q_r_code_generator(data:str= Query(...,max_length=30), 
-                             service:Optional[QRGenerator] = Depends(QRGeneratorService)):
+async def q_r_code_generator(data:str= Query(..., max_length=150),
+                             service:QRGenerator = Depends(QRGeneratorService)):
     '''
     Takes input as text and convert them into a QRcode png image
     '''
-    image = await service.generate(data)
-    return StreamingResponse(io.BytesIO(image),status_code=200,media_type="image/png")
+    env = ENV.values()
+    image_bytes = await service.generate(data)
+
+    return StreamingResponse(io.BytesIO(image_bytes), status_code=200, media_type="image/png")
     
 
-@router.post("/file-details", name="Get File Details")
+@router.post("/get-file-details", name="Get File Details")
 async def image_echo(file:UploadFile= File(...)):
 
     file_name:str = file.filename

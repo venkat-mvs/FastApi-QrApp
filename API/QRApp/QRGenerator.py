@@ -2,12 +2,13 @@ import io
 from qrcode import QRCode
 import qrcode
 
-class QRGenerator:
-    def __init__(self):
+class QRGenerator():
+
+    def __init__(self) -> None:
         self.qr:QRCode = qrcode.QRCode(
-            version=1,
+            version= 1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
+            box_size=5,
             border=4,
         )
 
