@@ -1,13 +1,15 @@
 import io
-from typing import Optional
+from logging import Logger
 from fastapi.datastructures import UploadFile
 from fastapi.params import Depends, File, Query
 from fastapi.responses import StreamingResponse
 from fastapi.routing import APIRoute, APIRouter
 
+''' API level imports '''
 from API.settings import ENV
+from API.logger import log
 
-
+''' APP level imports '''
 from .QRGenerator import QRGenerator
 from .services import QRGeneratorService
 from .models import FileObject
@@ -32,6 +34,7 @@ async def q_r_code_generator(data:str= Query(..., max_length=150),
     '''
     Takes input as text and convert them into a QRcode png image
     '''
+    log.info(f"QR Code Generator: {data}")
     env = ENV.values()
     image_bytes = await service.generate(data)
 
