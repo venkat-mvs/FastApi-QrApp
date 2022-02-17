@@ -1,7 +1,7 @@
 ''' Framework Level Modules '''
-from imp import reload
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 import uvicorn
 
 ''' API level modules '''
@@ -9,24 +9,35 @@ import API.logger as logger
 import API.startup as startup
 import API.middleware as middleware
 
+HOST = "localhost"
+PORT = 8000
+API_TITLE = "QRCode Generator"
+API_VERSION = "0.1.1"
+
 def main():
-    app = FastAPI(title="QRCode Generator",
-                version="0.1.1",
-                docs_url="/api/swagger")    
+
+    app = FastAPI(
+                title=API_TITLE,
+                version=API_VERSION,
+                docs_url="/api/swagger",
+                redoc_url="/api/docs"
+        )    
 
     origins = [
-        "http://0.0.0.0:8000",
-        "http://localhost:8080",
-        "*"
+        "http://0.0.0.0:8000"
     ]
 
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET","POST"],
         allow_headers=["*"],
     )
+    
+    @app.get("/", include_in_schema=False)
+    def redirect():
+        return RedirectResponse("api/docs")
     
     middleware.add_request_logger(app, log=logger.log)
 
@@ -37,13 +48,14 @@ def main():
 app = main()
 
 if __name__ == "__main__":
+    logger.log.info(f"Starting Server at http://{HOST}:{PORT}")
     uvicorn.run("main:app",
-                host = "0.0.0.0",
-                port = 80,
+                host = HOST,
+                port = PORT,
                 reload = True,
                 use_colors = True,
-                reload_includes= ["./*","./QRApp"],
+                reload_includes= ["*","./QRApp"],
                 reload_excludes = ["*/__pycache__"],
                 server_header = True,
-                log_level = "critical"
-                )
+                log_level = "debug"
+    )

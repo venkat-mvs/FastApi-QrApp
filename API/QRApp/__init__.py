@@ -1,3 +1,1 @@
-from .routers import router
-
-NAME:str = "QRApp"
+from .routers import QRApp
