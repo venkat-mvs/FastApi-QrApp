@@ -16,4 +16,4 @@ Generating QrCode from a api call, using FastApi python
   > cd API
   > python main.py
   ```
-> Any suggestions/contributions is accepted
+> Any suggestions/contributions is accepted. Create PRs for Contributions  
