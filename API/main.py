@@ -1,61 +1,47 @@
 ''' Framework Level Modules '''
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, logger as fastapi_logger
 import uvicorn
 
 ''' API level modules '''
-import API.logger as logger 
-import API.startup as startup
-import API.middleware as middleware
+from logger import logger,logging 
+import startup 
+from settings import ENV, Env
 
-HOST = "localhost"
-PORT = 8000
-API_TITLE = "QRCode Generator"
-API_VERSION = "0.1.1"
 
-def main():
 
+def main(settings:Env):
+    ''' App Initialization and Configuration '''
+    
     app = FastAPI(
-                title=API_TITLE,
-                version=API_VERSION,
+                title= settings.API_TITLE,
+                version=settings.API_VERSION,
                 docs_url="/api/swagger",
                 redoc_url="/api/docs"
-        )    
+        ) 
 
-    origins = [
-        "http://0.0.0.0:8000"
-    ]
+    #print(logging.root.manager.loggerDict)
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["GET","POST"],
-        allow_headers=["*"],
-    )
+    logger.setLevel(logging.DEBUG)
+        
+    startup.configure(app, log = logger, settings=settings)
     
-    @app.get("/", include_in_schema=False)
-    def redirect():
-        return RedirectResponse("api/docs")
-    
-    middleware.add_request_logger(app, log=logger.log)
-
-    startup.configure(app, log=logger.log)
-
     return app
 
-app = main()
+app = main(ENV.values())
 
-if __name__ == "__main__":
-    logger.log.info(f"Starting Server at http://{HOST}:{PORT}")
+if __name__ == '__main__':
+    ''' Web Server init '''
+
+    settings = ENV.values()
+
+    logger.info(f"Starting Server at http://{settings.HOST}:{settings.PORT}")
+
     uvicorn.run("main:app",
-                host = HOST,
-                port = PORT,
+                host = settings.HOST,
+                port = settings.PORT,
                 reload = True,
                 use_colors = True,
-                reload_includes= ["*","./QRApp"],
-                reload_excludes = ["*/__pycache__"],
+                reload_includes= ["*"],
                 server_header = True,
-                log_level = "debug"
-    )
+                log_level = logging.ERROR
+    ) 
