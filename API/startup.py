@@ -38,13 +38,13 @@ def configure(app:FastAPI, log: Logger, settings:Env = Depends(ENV.values)):
         
         middleware.add_request_logger(app, log=log)
 
-        utils.add_root_redirecter_for(app, to="api/docs")
+        utils.add_root_redirecter_for(app, to="/docs")
 
         utils.add_exception_handlers(app, log=log)
 
         qrapp = QRApp(log)
         log.info(f"Adding {QRApp.__name__} Routers... ")
-        app.include_router(qrapp,prefix="/api")
+        app.include_router(qrapp)
         log.info(f"Adding {QRApp.__name__} Routers...done")
 
 
