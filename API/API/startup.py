@@ -3,12 +3,11 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 ''' API level imports '''
-import middleware
-import utils
-from settings import ENV, Env
+from . import middleware, utils
+from .settings import ENV, Env
 
 ''' APP level imports '''
-from QRApp import QRApp
+from .QRApp import QRApp
 
 def configure(app:FastAPI, log: Logger, settings:Env = Depends(ENV.values)):
     ''' 

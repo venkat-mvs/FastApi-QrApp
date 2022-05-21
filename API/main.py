@@ -4,9 +4,9 @@ from fastapi import FastAPI, logger as fastapi_logger
 import uvicorn
 
 ''' API level modules '''
-from logger import logger,logging 
-import startup 
-from settings import ENV, Env
+from API.logger import logger,logging 
+import API.startup as startup
+from API.settings import ENV, Env
 
 
 
