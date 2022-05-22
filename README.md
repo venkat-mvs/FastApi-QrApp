@@ -16,4 +16,13 @@ Generating QrCode from a api call, using FastApi python
   > cd API
   > python main.py
   ```
+## Docker Setup
+### 1. Create Docker Image
+```bash
+> docker build -t qrapi:latest .
+```
+### 2. Start Container
+```bash
+> docker run -p 80:8000 -e HOST=0.0.0.0 -e PORT=8000 -e API_TITLE=API -e API_VERSION=0.1.1 -d qrapi:latest
+```
 > Any suggestions/contributions is accepted. Create PRs for Contributions  
