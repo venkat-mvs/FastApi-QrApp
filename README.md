@@ -9,7 +9,7 @@ Generating QrCode from a api call, using FastApi python
   ```
 ### 2. Install Require packages
   ```bash
-  > python -m pip install -r requirments.py.txt
+  > python -m pip install -r requirments.txt
   ```
 ### 3. Run Module
   ```bash
