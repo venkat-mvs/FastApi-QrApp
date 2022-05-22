@@ -10,11 +10,9 @@ COPY . /main/
 
 WORKDIR /main/API
 
-ARG port
-
 ENV HOST=0.0.0.0 \
     API_TITLE=QrApp \
     API_VERSION=0.1.1 \
-    PORT=$port
+    PORT=8000
 
 CMD [ "python", "main.py" ]
