@@ -1,11 +1,12 @@
 ''' Framework Level Modules '''
+from sys import prefix
 from fastapi import FastAPI, logger as fastapi_logger
 import uvicorn
 
 ''' API level modules '''
-from logger import logger,logging 
-import startup 
-from settings import ENV, Env
+from API.logger import logger,logging 
+import API.startup as startup
+from API.settings import ENV, Env
 
 
 
@@ -15,8 +16,9 @@ def main(settings:Env):
     app = FastAPI(
                 title= settings.API_TITLE,
                 version=settings.API_VERSION,
-                docs_url="/api/swagger",
-                redoc_url="/api/docs"
+                docs_url="/swagger",
+                redoc_url="/docs",
+                prefix="/api"
         ) 
 
     #print(logging.root.manager.loggerDict)
